@@ -1,0 +1,76 @@
+#!/usr/bin/env groovy
+printUsage = { println '''# spocify usage:
+#    spocify [package] sourceFile outputDirectory''' }
+
+def pkg
+if(args.length == 2) {
+	pkg = ''
+	sourceFile = args[0]
+	outputDirectory = args[1]
+} else if(args.length == 3) {
+	pkg = args[0]
+	sourceFile = args[1]
+	outputDirectory = args[2]
+} else {
+	printUsage()
+	System.exit 1
+}
+
+println "# Spocifying $sourceFile to $outputDirectory with package: ${pkg}..."
+
+sourceFile = new File(sourceFile)
+if(!sourceFile.exists()) {
+	println "# Could not find source file: ${sourceFile.absolutePath}"
+}
+
+outputDirectory = new File(outputDirectory, pkg.replace('.', '/'))
+println "# Full output dir = $outputDirectory.absolutePath"
+outputDirectory.mkdirs()
+if(!outputDirectory.exists()) {
+	println "# Failed to create output directory ${outputDirectory.absolutePath}.  Terminating."
+	System.exit 1
+}
+
+String getClassName(String classLine) {
+	classLine[1..-1].replaceAll ' ', ''
+}
+void closeFile(File file) {
+	if(file) {
+		file.withWriterAppend { f ->
+			f << '''
+	private void TODO(message='Not yet implemented.') { throw new RuntimeException("TODO: ${message}") }
+}'''
+		}
+	}
+}
+
+def currentFile
+sourceFile.eachLine { line ->
+	line = line.trim()
+	if(!line) return
+	if(line[0] == '#') {
+		closeFile(currentFile)
+		def className = getClassName(line)
+		currentFile = new File(outputDirectory, "${className}Spec.groovy")
+		currentFile.withWriter { f ->
+			if(pkg) f << "package ${pkg}\n\n"
+			f << """import spock.lang.*
+import grails.test.mixin.*
+
+@TestFor(${className})
+class ${className}Spec extends Specification {
+"""
+		}
+	}
+	if(!currentFile) throw new RuntimeException("Surprising content!")
+	if(line[0] == '*') {
+		currentFile.withWriterAppend { f ->
+			f << "\tdef '${line[1..-1].trim()}'() { expect: TODO() }\n"
+		}
+	}
+}
+
+closeFile(currentFile)
+
+println '# Spocification complete.'
+

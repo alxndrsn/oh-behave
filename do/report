@@ -1,0 +1,33 @@
+#!/usr/bin/env groovy
+import groovy.io.FileType
+
+if(args.length < 1) {
+	println '''# report usage:
+#     report sourceDirectory'''
+	System.exit 1
+}
+
+sourceDirectory = new File(args[0])
+println "# Searching for specs in $sourceDirectory.absolutePath..."
+specs = [:].withDefault { [] }
+sourceDirectory.eachFileRecurse(FileType.FILES) { f ->
+	if(!f.name.endsWith('Spec.groovy')) return
+	def specName = (f.path - sourceDirectory.path).replace('/', '.')
+	if(specName && specName[0] == '.') specName = specName[1..-1]
+	specName = specName[0..-12]
+
+	f.eachLine { line ->
+		def m = line =~ /^\s*def\s+['"](.*)['"]\s*\(\s*\)\s*\{\s*$/
+		if(m.matches()) {
+			def testName = m[0][1]
+			specs[specName] << testName
+		}
+	}
+}
+
+specs.each { specName, tests ->
+	println "# $specName\n"
+	tests.each { testName -> println "* $testName" }
+	println "\n"
+}
+
