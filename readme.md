@@ -13,7 +13,7 @@ Currently this toolkit consists of some simple scripts for converting lists of f
 	* saving without a description should fail validation
 	* doMagic should cause rabbit to appear
 
-when passed to `spocify` should generate the following test class:
+When passed to `spocify` this will generate a test class containing stubbed test methods.  All tests will fail until the implementation is added.
 
 	class MyDomainClassSpec extends Specification {
 		def 'instance should have a name'() { expect: TODO() }
