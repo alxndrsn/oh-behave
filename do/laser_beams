@@ -1,5 +1,18 @@
 #!/bin/bash
 set -e
+
+function log {
+	echo "# [laser_beams] $@"
+}
+function process_cleanup {
+	log 'Cleaning up background processes...'
+	set +e
+	jobs -p | xargs kill
+	log 'done.'
+	exit 0
+}
+trap process_cleanup SIGINT
+
 report=scotty.report
 
 cat > $report << EOF

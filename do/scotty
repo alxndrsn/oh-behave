@@ -22,7 +22,7 @@ while true; do
 
 	# check that test report file exists
 	if [ -f $junitReportXml ]; then
-		log "processing junit report xml..."
+		log "processing junit report xml at $junitReportXml..."
 		${0%/*}/dr.eval $junitReportXml > $reportOutput
 		removeOldReport
 	else
