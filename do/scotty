@@ -2,7 +2,7 @@
 set -e
 
 #testCommand="grails clean; grails test-app unit:"
-testCommand="grails test-app unit:"
+testCommand="grails test-app $@"
 testRunLogFile=scotty.log
 reportOutput=scotty.report
 junitReportXml=target/test-reports/TESTS-TestSuites.xml
@@ -18,6 +18,7 @@ removeOldReport
 
 while true; do
 	log "starting test loop..."
+	log "running command: $testCommand"
 	$testCommand | tee $testRunLogFile
 
 	# check that test report file exists
