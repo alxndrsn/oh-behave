@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+#testCommand="grails clean; grails test-app unit:"
+testCommand="grails test-app unit:"
+testRunLogFile=scotty.log
+reportOutput=scotty.report
+junitReportXml=target/test-reports/TESTS-TestSuites.xml
+
+function log {
+	echo "# [scotty] $@" >> $testRunLogFile
+}
+function removeOldReport {
+	log "removing old report..."
+	mv $junitReportXml $junitReportXml.bak
+}
+removeOldReport
+
+while true; do
+	log "starting test loop..."
+	$testCommand | tee $testRunLogFile
+
+	# check that test report file exists
+	if [ -f $junitReportXml ]; then
+		log "processing junit report xml..."
+		${0%/*}/dr.eval $junitReportXml > $reportOutput
+		removeOldReport
+	else
+		log "reporting build failure..."
+		tail $testRunLogFile > $reportOutput
+	fi
+done
+

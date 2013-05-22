@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+report=scotty.report
+
+cat > $report << EOF
+# Starting scotty, please be patient...
+# Follow log files at scotty.log
+EOF
+
+${0%/*}/scotty >/dev/null 2>/dev/null &
+
+while true; do
+	clear
+	echo "[$(date)] Every 15.0s: cat $report"
+	cat $report
+	sleep 15
+done
+

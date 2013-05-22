@@ -2,8 +2,8 @@
 import groovy.io.FileType
 
 if(args.length < 1) {
-	println '''# report usage:
-#     report sourceDirectory'''
+	println '''# exposition usage:
+#     exposition sourceDirectory'''
 	System.exit 1
 }
 

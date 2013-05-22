@@ -29,15 +29,27 @@ For `MyDomainClass` above, the generated spec file will look like:
 		private void TODO(message='Not yet implemented.') { throw new RuntimeException("TODO: ${message}") }
 	}
 
-To reverse the process, use the `report` script
+To reverse the process, use the `exposition` script
 
-## Spocify
+## spocify
 
 This will turn a markdown file containing descriptions of behaviour into outline Grails Spock unit tests.
 
-## Report
+## exposition
 
 This will turn spock tests into a markdown file describing the behaviour that is being tested.
+
+## dr.eval
+
+This evaluates a junit report XML and turns it into a simple console-friendly output with colour coding for passing and failing tests.
+
+## scotty
+
+Scotty we continuously re-run a build and generate a report detailing build failure or `dr.eval` output as appropriate.
+
+## laser_beams
+
+Run scotty as a background task and continuously update the result to the console.
 
 [1]: http://www.grails.org
 [2]: https://code.google.com/p/spock/
