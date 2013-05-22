@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-#testCommand="grails clean; grails test-app unit:"
 testCommand="grails test-app $@"
 testRunLogFile=scotty.log
 reportOutput=scotty.report
