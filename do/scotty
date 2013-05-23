@@ -11,7 +11,9 @@ function log {
 }
 function removeOldReport {
 	log "removing old report..."
+	set +e
 	mv $junitReportXml $junitReportXml.bak
+	set -e
 }
 removeOldReport
 
@@ -19,6 +21,7 @@ while true; do
 	log "starting test loop..."
 	log "running command: $testCommand"
 	$testCommand | tee $testRunLogFile
+	log 'command completed.  Checking for test report...'
 
 	# check that test report file exists
 	if [ -f $junitReportXml ]; then
