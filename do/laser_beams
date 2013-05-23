@@ -24,7 +24,8 @@ ${0%/*}/scotty $@ >/dev/null 2>/dev/null &
 
 while true; do
 	clear
-	echo "[$(date)] Every 15.0s: cat $report"
+#	echo "[$(date)] Every 15.0s: [$(ls -l --full-time $report | cut -d' ' -f6-8)] cat $report"
+	echo "[$(date)] Every 15.0s: [] cat $report"
 	cat $report
 	sleep 15
 done
