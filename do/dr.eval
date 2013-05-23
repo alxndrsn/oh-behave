@@ -12,7 +12,7 @@ final RESET = '\033[0m'
 def testsuites = new XmlParser().parse(new File(junitReportFile))
 testsuites.testsuite.each { testsuite ->
 	if(testsuite.@errors == '0' && testsuite.@failures == '0') {
-		println "${BG_GREEN}${FG_BLACK}[PASS]${testsuite.@package?"${testsuite.@package}.":''}${testsuite.@name} : ${testsuites.testcase.size()} tests all passed"
+		println "${BG_GREEN}${FG_BLACK}[PASS]${testsuite.@package?"${testsuite.@package}.":''}${testsuite.@name} : ${testsuite.testcase.size()} tests all passed"
 		return
 	}
 	testsuite.testcase.each { c ->
