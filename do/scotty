@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-testCommand="grails test-app $@"
+testCommand="grails test-app --stacktrace --non-interactive $@"
 testRunLogFile=scotty.log
 reportOutput=scotty.report
 junitReportXml=target/test-reports/TESTS-TestSuites.xml
@@ -30,7 +30,7 @@ while true; do
 		removeOldReport
 	else
 		log "reporting build failure..."
-		tail $testRunLogFile > $reportOutput
+		tail -n 80 $testRunLogFile > $reportOutput
 	fi
 done
 
